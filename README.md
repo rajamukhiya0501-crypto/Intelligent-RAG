@@ -1,77 +1,121 @@
-# Intelligent RAG – HR Policy Chatbot
+# Intelligent RAG — HR Policy Assistant
 
-An AI-powered Retrieval-Augmented Generation (RAG) chatbot that answers employee questions using company HR policy documents.
+**An AI-powered Retrieval-Augmented Generation (RAG) system that answers employee questions using company HR policy documents.**
 
-## Project Overview
+[GitHub Repository](https://github.com/rajamukhiya0501-crypto/Intelligent-RAG)
 
-Employees often need to search through multiple HR documents to find information about company policies, leave rules, salary, benefits, and other workplace guidelines.
+## Overview
 
-This project uses RAG to retrieve relevant information from HR documents and generate context-aware answers using a Large Language Model (LLM).
+Finding information in company HR documents can be time-consuming. Employees may need to search multiple policy PDFs to understand leave entitlements, maternity benefits, salary rules, and workplace guidelines.
+
+Intelligent RAG addresses this problem by retrieving relevant information from HR documents and using a Large Language Model (LLM) to generate context-grounded answers.
+
+The project was developed as part of a Generative AI learning project and Kaggle competition.
 
 ## Problem Statement
 
-Build an intelligent HR assistant that can understand employee questions, retrieve relevant information from company documents, and provide accurate answers based on the available knowledge base.
+Build an intelligent HR assistant that can:
 
-## Key Features
+- Understand employee questions.
+- Retrieve relevant information from internal HR policy documents.
+- Generate accurate, context-aware responses.
+- Handle questions that are outside the HR knowledge base.
 
-- **Document Loading:** Reads company HR policy PDF documents.
-- **Text Chunking:** Splits documents into smaller text chunks.
-- **Embeddings:** Converts text into numerical vectors.
-- **Vector Search:** Retrieves relevant document chunks.
-- **LLM Integration:** Uses Groq to generate answers.
-- **Context-Aware Responses:** Answers questions using retrieved HR information.
-- **Out-of-Scope Handling:** Handles questions unrelated to HR policies.
+## System Architecture
 
-## RAG Architecture
-
-```text
-HR Policy PDF Documents
-          |
-          v
-    Document Loading
-          |
-          v
-      Text Chunking
-          |
-          v
-       Embeddings
-          |
-          v
-     Vector Database
-          |
-          v
-   Relevant Retrieval
-          |
-          v
-    Context + Question
-          |
-          v
-       Groq LLM
-          |
-          v
-    Generated Answer
+```mermaid
+flowchart TD
+    A[HR Policy PDF Documents] --> B[Document Loading]
+    B --> C[Text Chunking]
+    C --> D[Embedding Model]
+    D --> E[FAISS Vector Store]
+    F[Employee Question] --> G[Query Embedding]
+    G --> H[Retriever]
+    E --> H
+    H --> I[Retrieved Context]
+    I --> J[Guardrails and Prompt]
+    F --> J
+    J --> K[LLM]
+    K --> L[Generated Answer]
 ```
 
 ## Technology Stack
 
-- Python
-- LangChain
-- Groq API
-- Embedding Models
-- Vector Database
-- Pandas
-- Jupyter Notebook
+| Component | Technology |
+|---|---|
+| Programming Language | Python |
+| LLM Framework | LangChain |
+| Document Loading | PyPDFDirectoryLoader |
+| Text Splitting | RecursiveCharacterTextSplitter |
+| Embeddings | Sentence Transformers |
+| Embedding Model | all-MiniLM-L6-v2 |
+| Vector Search | FAISS |
+| LLM Providers | Groq / Gemini / OpenAI (configurable in the project architecture) |
+| Notebook | Jupyter / Kaggle |
+| Data Processing | Pandas |
+| Observability | LangSmith |
 
-## Project Structure
+## How It Works
+
+**1. Document Loading**
+
+Loads HR policy PDFs and extracts their text and metadata.
+
+**2. Text Chunking**
+
+Splits large documents into smaller chunks so relevant information can be retrieved efficiently.
+
+**3. Embedding Generation**
+
+Converts text chunks into numerical vectors representing their semantic meaning.
+
+**4. Vector Storage**
+
+Stores embeddings in a FAISS index for similarity-based retrieval.
+
+**5. Information Retrieval**
+
+Finds the most relevant document chunks for an employee's question.
+
+**6. Answer Generation**
+
+Combines the retrieved context and question in a prompt and sends them to the configured LLM.
+
+**7. Guardrails**
+
+Helps handle questions outside the HR policy domain and limits unsupported answers.
+
+## Project Workflow
+
+```text
+HR Documents
+    ↓
+Document Processing
+    ↓
+Chunking and Embeddings
+    ↓
+FAISS Index
+    ↓
+Question Retrieval
+    ↓
+LLM + Context
+    ↓
+Final Answer
+    ↓
+submission.csv
+```
+
+## Repository Structure
 
 ```text
 Intelligent-RAG/
 │
-├── code.ipynb
-├── .gitignore
-├── README.md
-└── .env                 # Keep private
+├── code.ipynb       # RAG pipeline implementation
+├── README.md        # Project documentation
+└── .gitignore       # Excluded files and secrets
 ```
+
+Competition datasets, private HR documents, generated CSV files, and API credentials are intentionally excluded from the public repository.
 
 ## Getting Started
 
@@ -79,39 +123,49 @@ Intelligent-RAG/
 
 ```bash
 git clone https://github.com/rajamukhiya0501-crypto/Intelligent-RAG.git
-```
-
-### 2. Open the project
-
-```bash
 cd Intelligent-RAG
 ```
 
-### 3. Install dependencies
+### 2. Set up Python
 
-Install the Python packages required by the notebook.
+Use a compatible Python environment and install the dependencies required by the notebook.
 
-### 4. Configure API credentials
+### 3. Configure API credentials
 
-Create a `.env` file and configure your Groq API key using the environment variable expected by the notebook.
+Configure the API key for your selected LLM provider using the environment variable expected by the notebook.
 
-Never upload API keys or `.env` files to GitHub.
+**Never commit `.env` or expose API keys.**
+
+### 4. Prepare the data
+
+Provide the required HR policy PDF corpus and test questions in the expected directory structure.
+
+For the Kaggle competition, attach the official competition dataset to the notebook.
 
 ### 5. Run the notebook
 
-Open `code.ipynb` in Jupyter Notebook or VS Code and execute the cells in order.
+Open `code.ipynb` in Jupyter Notebook, VS Code, or Kaggle and execute the cells in order.
 
-## Learning Outcomes
+The pipeline processes the questions and generates answers in the required competition submission format.
 
-Through this project, I explored:
+## Key Learning Outcomes
 
-- Retrieval-Augmented Generation (RAG)
-- Document processing
-- Text chunking
-- Semantic embeddings
-- Vector similarity search
-- LLM integration
-- Context-based question answering
+- Understanding Retrieval-Augmented Generation.
+- PDF document processing and text extraction.
+- Text chunking and semantic embeddings.
+- Vector databases and similarity search.
+- Building retrieval pipelines using LangChain.
+- Integrating Large Language Models.
+- Prompt engineering and guardrails.
+- Generating structured Kaggle submissions.
+
+## Future Improvements
+
+- Add a web-based chatbot interface.
+- Display document citations with generated answers.
+- Improve retrieval using hybrid search.
+- Evaluate retrieval quality and answer accuracy.
+- Add automated testing and error handling.
 
 ## Author
 
@@ -121,4 +175,8 @@ GitHub: [@rajamukhiya0501-crypto](https://github.com/rajamukhiya0501-crypto)
 
 ---
 
-*Built as part of my Generative AI learning journey.*
+*Built while learning and exploring Generative AI, Large Language Models, and Retrieval-Augmented Generation.*
+
+
+
+
